@@ -39,6 +39,7 @@ $from     = 'bot.blocker@yourdomain.com'; // from email
 $recip    = 'webmaster@yourdomain.com'; // to email
 $subject  = 'Bad Bot Alert!';
 $filename = 'blackhole.dat';
+$filename = 'blackhole.dat'; //File name to write to. Make sure that you give the WWW server permision to write to this file.
 $message  = '';
 //Do a whois lookup?
 $lookup   = '';
