@@ -24,6 +24,7 @@ Credits: Includes customized/modified versions of these fine scripts:
 
 $badbot = 0;
 $filename = 'blackhole.dat';
+$ipaddress = get_ip_address();
 
 $fp = fopen($filename, 'r') or die('<p>Error opening file.</p>');
 while ($line = fgets($fp)) {
