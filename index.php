@@ -26,19 +26,10 @@ Credits: Includes customized/modified versions of these fine scripts:
  */
 define('DOC_ROOT', getcwd());
 require_once DOC_ROOT . '/includes/bootstrap.inc';
-/**
- * version
- * 
- * (default value: '2.0')
- * 
- * @var string
- * @access public
- */
-$version = '2.0';
+
 $from     = 'bot.blocker@yourdomain.com'; // from email
 $recip    = 'webmaster@yourdomain.com'; // to email
 $subject  = 'Bad Bot Alert!';
-$filename = 'blackhole.dat';
 $filename = 'blackhole.dat'; //File name to write to. Make sure that you give the WWW server permision to write to this file.
 $message  = '';
 //Do a whois lookup?
@@ -72,68 +63,6 @@ function sanitize($string) {
 	$string = str_replace("\n", "", $string);
 	$string = trim($string); 
 	return $string;
-}
-
-
-/**
- * whois_lookup function.
- * 
- * @access public
- * @param mixed $ipaddress
- * @return void
- */
-function whois_lookup($ipaddress) {
-	$msg = '';
-	$server = 'whois.arin.net';
-	if (!$ipaddress = gethostbyname($ipaddress)) {
-		$msg .= 'Can not perform lookup without an IP address.' ."\n\n";
-	} else {
-		if (!$sock = fsockopen($server, 43, $num, $error, 20)) {
-			unset($sock);
-			$msg .= 'Timed-out connecting to $server (port 43).' ."\n\n";
-		} else {
-			//fputs($sock, "$ipaddress\n");
-			fputs($sock, "n $ipaddress\n");
-			$buffer = '';
-			while (!feof($sock))
-			$buffer .= fgets($sock, 10240); 
-			fclose($sock);
-		}
-		if (eregi('RIPE.NET', $buffer)) {
-			$nextServer = 'whois.ripe.net';
-		} else if (eregi('whois.apnic.net', $buffer)) {
-			$nextServer = 'whois.apnic.net';
-		} else if (eregi('nic.ad.jp', $buffer)) {
-			$nextServer = 'whois.nic.ad.jp';
-			$extra = '/e'; // suppress JaPaNIC characters
-		} else if (eregi('whois.registro.br', $buffer)) {
-			$nextServer = 'whois.registro.br';
-		}
-		if (isset($nextServer)) {
-			$buffer = '';
-			$msg .= 'Deferred to specific whois server: '. $nextServer .'...' ."\n\n";
-			if (!$sock = fsockopen($nextServer, 43, $num, $error, 10)) {
-				unset($sock);
-				$msg .= 'Timed-out connecting to ' . $nextServer . ' (port 43)' ."\n\n";
-			} else {
-				fputs($sock, $ipaddress . $extra ."\n");
-				while (!feof($sock))
-				$buffer .= fgets($sock, 10240);
-				fclose($sock);
-			}
-		}
-		$msg .= nl2br($buffer);
-	}
-	$msg = htmlspecialchars(trim(ereg_replace('#', '', strip_tags($msg))));
-	$msg = preg_replace("/\\n\\n\\n\\n/i", "\n", $msg);
-	$msg = preg_replace("/\\n\\n\\n/i", "\n\n", $msg);
-	return $msg;
-}
-$whois = whois_lookup($ipaddress);
-
-// check target | bugfix
-if (!$ipaddress || !preg_match("/^[\w\d\.\-]+\.[\w\d]{1,4}$/i", $ipaddress)) { 
-	exit('Error: You did not specify a valid target host or IP.');
 }
 
 /**
@@ -181,7 +110,7 @@ if ($badbot == 0) {
 			<h1>You have fallen into a trap!</h1>
 			<p>The <a href="/robots.txt">robots.txt</a> file explicitly forbids your presence at this location. If you believe this is a mistake, you may <a href="/contact/">contact the administrator</a>.
 			</p>
-			<h3>IP Address <?php echo $ipaddress; ?> has been added to the blacklist.</h3>
+			<h3>IP Address <?php var_dump($ipaddress); ?> has been added to the blacklist.</h3>
 		</div>
 	</body>
 </html><?php 
@@ -192,8 +121,10 @@ if ($badbot == 0) {
 // 2nd+ visit (banned)
 } else if ($badbot > 0) {
 	echo '<h1>You have been banned from this domain</h1>';
-	echo '<p>If you believe this is a mistake, you may <a href="/contact/">contact the administrator</a> via proxy server.</p>';
+	echo '<p>If you believe this is a mistake, you may <a href="/contact/">contact the administrator</a> via proxy server.<br> <?php var_dump($percent); ?></p>';
 } else { 
 	die(); 
 }
+
+
 ?>

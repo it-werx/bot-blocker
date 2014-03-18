@@ -60,16 +60,16 @@ function &buster_static($name, $default_value = NULL, $reset = FALSE) {
   return $data;
 } 
 /**
- * ip_address function.
+ * get_ip_address function.
  * 
  * @access public
  * @return IP address of client machine, adjusted for reverse proxy and/or cluster environments.
  */
 function get_ip_address() {
-  $ip_address = &buster_static(__FUNCTION__);
+  $ipaddress = &buster_static(__FUNCTION__);
 
-  if (!isset($ip_address)) {
-    $ip_address = $_SERVER['REMOTE_ADDR'];
+  if (!isset($ipaddress)) {
+    $ipaddress = $_SERVER['REMOTE_ADDR'];
 
     if (variable_get('reverse_proxy', 0)) {
       $reverse_proxy_header = variable_get('reverse_proxy_header', 'HTTP_X_FORWARDED_FOR');
@@ -85,18 +85,18 @@ function get_ip_address() {
         $forwarded = array_map('trim', $forwarded);
 
         // Tack direct client IP onto end of forwarded array.
-        $forwarded[] = $ip_address;
+        $forwarded[] = $ipaddress;
 
         // Eliminate all trusted IPs.
         $untrusted = array_diff($forwarded, $reverse_proxy_addresses);
 
         // The right-most IP is the most specific we can trust to be true.
-        $ip_address = array_pop($untrusted);
+        $ipaddress = array_pop($untrusted);
       }
     }
   }
 
-  return $ip_address;
+  return $ipaddress;
 }
 
 /**
@@ -141,7 +141,7 @@ function variable_get($name, $default = NULL) {
  * @param mixed $name
  * @return Delete a variable from cached variables.
  */
-/*function variable_del($name) {
+function variable_del($name) {
   global $conf;
 
   db_delete('variable')->condition('name', $name)->execute();
@@ -149,17 +149,17 @@ function variable_get($name, $default = NULL) {
 
   unset($conf[$name]);
 }
-*/
+
 
 
 /**
  * blacklist_query function.
  * 
  * @access public
- * @param mixed $ip
+ * @param mixed $ipaddress
  * @return Depending on how many sites say that the IP address is a spammer it will pass the variable as true or false.
  */
-function blacklist_query($ip){ 
+function blacklist_query($ipaddress){ 
     $listed = true; 
     $dnsbl_lookup = array( 
         "dnsbl-1.uceprotect.net", 
@@ -171,8 +171,8 @@ function blacklist_query($ip){
     ); // Add your preferred list of DNSBL's 
     $lookups = count($dnsbl_lookup); 
     $total = 0; 
-    if($ip){ 
-        $reverse_ip = implode(".", array_reverse(explode(".", $ip))); 
+    if($ipaddress){ 
+        $reverse_ip = implode(".", array_reverse(explode(".", $ipaddress))); 
         foreach($dnsbl_lookup as $host){ 
             if(checkdnsrr($reverse_ip.".".$host.".", "A")){ 
                 $total++; 
@@ -187,7 +187,68 @@ function blacklist_query($ip){
     } 
 } 
  
-if(blacklist_query($_SERVER["REMOTE_ADDR"])){ 
+if(blacklist_query($ipaddress)){ 
     die("Your on the blacklist!"); 
+}
+
+/**
+ * whois_lookup function.
+ * 
+ * @access public
+ * @param mixed $ipaddress
+ * @return Whois information about IP address.
+ */
+function whois_lookup($ipaddress) {
+	$msg = '';
+	$server = 'whois.arin.net';
+	if (!$ipaddress = gethostbyname($ipaddress)) {
+		$msg .= 'Can not perform lookup without an IP address.' ."\n\n";
+	} else {
+		if (!$sock = fsockopen($server, 43, $num, $error, 20)) {
+			unset($sock);
+			$msg .= 'Timed-out connecting to $server (port 43).' ."\n\n";
+		} else {
+			//fputs($sock, "$ipaddress\n");
+			fputs($sock, "n $ipaddress\n");
+			$buffer = '';
+			while (!feof($sock))
+			$buffer .= fgets($sock, 10240); 
+			fclose($sock);
+		}
+		if (eregi('RIPE.NET', $buffer)) {
+			$nextServer = 'whois.ripe.net';
+		} else if (eregi('whois.apnic.net', $buffer)) {
+			$nextServer = 'whois.apnic.net';
+		} else if (eregi('nic.ad.jp', $buffer)) {
+			$nextServer = 'whois.nic.ad.jp';
+			$extra = '/e'; // suppress JaPaNIC characters
+		} else if (eregi('whois.registro.br', $buffer)) {
+			$nextServer = 'whois.registro.br';
+		}
+		if (isset($nextServer)) {
+			$buffer = '';
+			$msg .= 'Deferred to specific whois server: '. $nextServer .'...' ."\n\n";
+			if (!$sock = fsockopen($nextServer, 43, $num, $error, 10)) {
+				unset($sock);
+				$msg .= 'Timed-out connecting to ' . $nextServer . ' (port 43)' ."\n\n";
+			} else {
+				fputs($sock, $ipaddress . $extra ."\n");
+				while (!feof($sock))
+				$buffer .= fgets($sock, 10240);
+				fclose($sock);
+			}
+		}
+		$msg .= nl2br($buffer);
+	}
+	$msg = htmlspecialchars(trim(ereg_replace('#', '', strip_tags($msg))));
+	$msg = preg_replace("/\\n\\n\\n\\n/i", "\n", $msg);
+	$msg = preg_replace("/\\n\\n\\n/i", "\n\n", $msg);
+	return $msg;
+}
+$whois = whois_lookup($ipaddress);
+
+// check target | bugfix
+if (!$ipaddress || !preg_match("/^[\w\d\.\-]+\.[\w\d]{1,4}$/i", $ipaddress)) { 
+	exit('Error: You did not specify a valid target host or IP.');
 }
 ?>
