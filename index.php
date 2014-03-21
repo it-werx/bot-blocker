@@ -5,7 +5,6 @@ Title: Bot Blocker
 Description: Automatically trap and block bots that don't obey robots.txt rules
 Project URL: http://www.it-werx.net
 Author: Ron Mac Quarrie
-Version: 2.0
 License: GPLv2 or later
 
 This program is free software; you can redistribute it and/or modify it under the 
@@ -21,20 +20,9 @@ Credits: Includes customized/modified versions of these fine scripts:
  - Kloth.net Bot Trap @ http://www.kloth.net/internet/bottrap.php
 
 */
-/**
- * Root directory of installation.
- */
 define('DOC_ROOT', getcwd());
 require_once DOC_ROOT . '/includes/bootstrap.inc';
-/**
- * version
- * 
- * (default value: '2.0')
- * 
- * @var string
- * @access public
- */
-$version = '2.0';
+
 $from     = 'bot.blocker@yourdomain.com'; // from email
 $recip    = 'webmaster@yourdomain.com'; // to email
 $subject  = 'Bad Bot Alert!';
@@ -71,68 +59,6 @@ function sanitize($string) {
 	$string = str_replace("\n", "", $string);
 	$string = trim($string); 
 	return $string;
-}
-
-
-/**
- * whois_lookup function.
- * 
- * @access public
- * @param mixed $ipaddress
- * @return void
- */
-function whois_lookup($ipaddress) {
-	$msg = '';
-	$server = 'whois.arin.net';
-	if (!$ipaddress = gethostbyname($ipaddress)) {
-		$msg .= 'Can not perform lookup without an IP address.' ."\n\n";
-	} else {
-		if (!$sock = fsockopen($server, 43, $num, $error, 20)) {
-			unset($sock);
-			$msg .= 'Timed-out connecting to $server (port 43).' ."\n\n";
-		} else {
-			//fputs($sock, "$ipaddress\n");
-			fputs($sock, "n $ipaddress\n");
-			$buffer = '';
-			while (!feof($sock))
-			$buffer .= fgets($sock, 10240); 
-			fclose($sock);
-		}
-		if (eregi('RIPE.NET', $buffer)) {
-			$nextServer = 'whois.ripe.net';
-		} else if (eregi('whois.apnic.net', $buffer)) {
-			$nextServer = 'whois.apnic.net';
-		} else if (eregi('nic.ad.jp', $buffer)) {
-			$nextServer = 'whois.nic.ad.jp';
-			$extra = '/e'; // suppress JaPaNIC characters
-		} else if (eregi('whois.registro.br', $buffer)) {
-			$nextServer = 'whois.registro.br';
-		}
-		if (isset($nextServer)) {
-			$buffer = '';
-			$msg .= 'Deferred to specific whois server: '. $nextServer .'...' ."\n\n";
-			if (!$sock = fsockopen($nextServer, 43, $num, $error, 10)) {
-				unset($sock);
-				$msg .= 'Timed-out connecting to ' . $nextServer . ' (port 43)' ."\n\n";
-			} else {
-				fputs($sock, $ipaddress . $extra ."\n");
-				while (!feof($sock))
-				$buffer .= fgets($sock, 10240);
-				fclose($sock);
-			}
-		}
-		$msg .= nl2br($buffer);
-	}
-	$msg = htmlspecialchars(trim(ereg_replace('#', '', strip_tags($msg))));
-	$msg = preg_replace("/\\n\\n\\n\\n/i", "\n", $msg);
-	$msg = preg_replace("/\\n\\n\\n/i", "\n\n", $msg);
-	return $msg;
-}
-$whois = whois_lookup($ipaddress);
-
-// check target | bugfix
-if (!$ipaddress || !preg_match("/^[\w\d\.\-]+\.[\w\d]{1,4}$/i", $ipaddress)) { 
-	exit('Error: You did not specify a valid target host or IP.');
 }
 
 /**

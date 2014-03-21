@@ -66,10 +66,10 @@ function &buster_static($name, $default_value = NULL, $reset = FALSE) {
  * @return IP address of client machine, adjusted for reverse proxy and/or cluster environments.
  */
 function get_ip_address() {
-  $ip_address = &buster_static(__FUNCTION__);
+  $ipaddress = &buster_static(__FUNCTION__);
 
-  if (!isset($ip_address)) {
-    $ip_address = $_SERVER['REMOTE_ADDR'];
+  if (!isset($ipaddress)) {
+    $ipaddress = $_SERVER['REMOTE_ADDR'];
 
     if (variable_get('reverse_proxy', 0)) {
       $reverse_proxy_header = variable_get('reverse_proxy_header', 'HTTP_X_FORWARDED_FOR');
@@ -91,12 +91,12 @@ function get_ip_address() {
         $untrusted = array_diff($forwarded, $reverse_proxy_addresses);
 
         // The right-most IP is the most specific we can trust to be true.
-        $ip_address = array_pop($untrusted);
+        $ipaddress = array_pop($untrusted);
       }
     }
   }
 
-  return $ip_address;
+  return $ipaddress;
 }
 
 /**
@@ -122,7 +122,7 @@ function variable_get($name, $default = NULL) {
  * @param mixed $value
  * @return Set a variable global.
  */
-/*function variable_set($name, $value) {
+function variable_set($name, $value) {
   global $conf;
 
   db_merge('variable')->key(array('name' => $name))->fields(array('value' => serialize($value)))->execute();
@@ -131,7 +131,7 @@ function variable_get($name, $default = NULL) {
 
   $conf[$name] = $value;
 }
-*/
+
 
 
 /**
@@ -141,7 +141,7 @@ function variable_get($name, $default = NULL) {
  * @param mixed $name
  * @return Delete a variable from cached variables.
  */
-/*function variable_del($name) {
+function variable_del($name) {
   global $conf;
 
   db_delete('variable')->condition('name', $name)->execute();
@@ -149,17 +149,18 @@ function variable_get($name, $default = NULL) {
 
   unset($conf[$name]);
 }
-*/
+
 
 
 /**
  * blacklist_query function.
- * 
+ * You can find a list of DNSBL services @ http://www.dnsbl.info/dnsbl-list.php The idea being the more sites involved in the
+ * proccess the more accurate the outcome.
  * @access public
- * @param mixed $ip
+ * @param mixed $ipaddress 
  * @return Depending on how many sites say that the IP address is a spammer it will pass the variable as true or false.
  */
-function blacklist_query($ip){ 
+function blacklist_query($ipaddress){ 
     $listed = true; 
     $dnsbl_lookup = array( 
         "dnsbl-1.uceprotect.net", 
@@ -172,7 +173,7 @@ function blacklist_query($ip){
     $lookups = count($dnsbl_lookup); 
     $total = 0; 
     if($ip){ 
-        $reverse_ip = implode(".", array_reverse(explode(".", $ip))); 
+        $reverse_ip = implode(".", array_reverse(explode(".", $ipaddress))); 
         foreach($dnsbl_lookup as $host){ 
             if(checkdnsrr($reverse_ip.".".$host.".", "A")){ 
                 $total++; 
@@ -187,7 +188,7 @@ function blacklist_query($ip){
     } 
 } 
  
-if(blacklist_query($_SERVER["REMOTE_ADDR"])){ 
+if(blacklist_query($ipaddess)){ 
     die("Your on the blacklist!"); 
 }
 ?>
