@@ -1,0 +1,168 @@
+<html>
+    <head>
+        <script
+            type="text/javascript"
+            src="../js/jquery-1.4.2.min.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shCore.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shBrushJScript.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shBrushPhp.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shBrushXml.js">
+        </script>
+        <link
+            href="../syntax_highlighter/styles/shCore.css" rel="stylesheet"
+            type="text/css"
+        />
+        <link
+            href="../syntax_highlighter/styles/shCoreEclipse.css"
+            rel="stylesheet" type="text/css"
+        />
+        <link
+            href="../syntax_highlighter/styles/shThemeWordpress.css"
+            rel="stylesheet" type="text/css"
+        />
+    </head>
+    <body>
+        <pre class="brush: php">&lt;?php 
+/*
+
+Title: Bot Blocker
+Description: Automatically trap and block bots that don't obey robots.txt rules
+Project URL: http://www.it-werx.net
+Author: Ron Mac Quarrie
+License: GPLv2 or later
+
+This program is free software; you can redistribute it and/or modify it under the 
+terms of the GNU General Public License as published by the Free Software Foundation; 
+either version 2 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+See the GNU General Public License for more details.
+
+Credits: Includes customized/modified versions of these fine scripts:
+ - Network Query Tool @ http://www.drunkwerks.com/docs/NetworkQueryTool/
+ - Kloth.net Bot Trap @ http://www.kloth.net/internet/bottrap.php
+
+*/
+define('DOC_ROOT', getcwd());
+require_once DOC_ROOT . '/includes/bootstrap.inc';
+
+$from     = 'bot.blocker@yourdomain.com'; // from email
+$recip    = 'webmaster@yourdomain.com'; // to email
+$subject  = 'Bad Bot Alert!';
+$filename = 'blackhole.dat';
+$message  = '';
+//Do a whois lookup?
+$lookup   = '';
+$badbot   = 0;
+
+$request   = sanitize($_SERVER['REQUEST_URI']);
+//sanitize($_SERVER['REMOTE_ADDR']);
+$ipaddress = get_ip_address();
+$useragent = sanitize($_SERVER['HTTP_USER_AGENT']);
+$protocol  = sanitize($_SERVER['SERVER_PROTOCOL']);
+$method    = sanitize($_SERVER['REQUEST_METHOD']);
+
+
+date_default_timezone_set('America/Los_Angeles');
+$date = date('l, F jS Y @ H:i:s');
+$time = time();
+
+
+/**
+ * sanitize function.
+ * 
+ * @access public
+ * @param mixed $string
+ * @return void
+ */
+function sanitize($string) {
+	$string = trim($string); 
+	$string = strip_tags($string);
+	$string = htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+	$string = str_replace(&quot;\n&quot;, &quot;&quot;, $string);
+	$string = trim($string); 
+	return $string;
+}
+
+/**
+ * fp
+ * 
+ * (default value: fopen($filename, 'r') or die('&lt;p&gt;Error opening file.&lt;/p&gt;'))
+ * 
+ * @var string
+ * @access public
+ */
+$fp = fopen($filename, 'r') or die('&lt;p&gt;Error opening file.&lt;/p&gt;');
+while ($line = fgets($fp)) {
+	if (!preg_match(&quot;/(googlebot|slurp|msnbot|teoma|yandex)/i&quot;, $line)) {
+		$u = explode(' ', $line);
+		if ($u[0] == $ipaddress) ++$badbot;
+	}
+}
+fclose($fp);
+
+// record hit
+if ($badbot == 0) {
+	$message   = $date . &quot;\n\n&quot;;
+	$message  .= 'URL Request: ' . $request . &quot;\n&quot;;
+	$message  .= 'IP Address: ' . $ipaddress . &quot;\n&quot;;
+	$message  .= 'User Agent: '  . $useragent . &quot;\n\n&quot;;
+	$message  .= 'Whois Lookup: ' . &quot;\n\n&quot; . $whois . &quot;\n&quot;;
+
+	mail($recip, $subject, $message, 'From: '. $from);
+
+	$fp = fopen($filename, 'a+');
+	fwrite($fp, $ipaddress .&quot; - &quot;. $method .&quot; - &quot;. $protocol .&quot; - &quot;. $date .&quot; - &quot;. $useragent .&quot;\n&quot;);
+	fclose($fp);
+
+// 1st visit (warning) ?&gt;
+&lt;!DOCTYPE html&gt;
+	&lt;title&gt;Welcome to Bot Blocker!&lt;/title&gt;
+	&lt;style&gt;
+		body { color: #fff; background-color: #851507; font: 14px/1.5 Helvetica, Arial, sans-serif; }
+		#blackhole { margin: 20px auto; width: 700px; }
+		pre { padding: 20px; white-space: pre-line; border-radius: 10px; background-color: #b34334; }
+		a { color: #fff; }
+	&lt;/style&gt;
+	&lt;body&gt;
+		&lt;div id=&quot;blackhole&quot;&gt;
+			&lt;h1&gt;You have fallen into a trap!&lt;/h1&gt;
+			&lt;p&gt;The &lt;a href=&quot;/robots.txt&quot;&gt;robots.txt&lt;/a&gt; file explicitly forbids your presence at this location. If you believe this is a mistake, you may &lt;a href=&quot;/contact/&quot;&gt;contact the administrator&lt;/a&gt;.
+			&lt;/p&gt;
+			&lt;h3&gt;IP Address &lt;?php echo $ipaddress; ?&gt; has been added to the blacklist.&lt;/h3&gt;
+		&lt;/div&gt;
+	&lt;/body&gt;
+&lt;/html&gt;&lt;?php 
+/*
+* Might use this?
+* &lt;pre&gt;WHOIS Lookup for &lt;?php echo $ipaddress .&quot;\n&quot;. $date .&quot;\n\n&quot;. $whois; ?&gt;&lt;/pre&gt;
+*/
+// 2nd+ visit (banned)
+} else if ($badbot &gt; 0) {
+	echo '&lt;h1&gt;You have been banned from this domain&lt;/h1&gt;';
+	echo '&lt;p&gt;If you believe this is a mistake, you may &lt;a href=&quot;/contact/&quot;&gt;contact the administrator&lt;/a&gt; via proxy server.&lt;/p&gt;';
+} else { 
+	die(); 
+}
+?&gt;</pre>
+        <script type="text/javascript">
+             SyntaxHighlighter.all();
+             jQuery('.gutter div').each(function(key, data){
+                jQuery(data).prepend('<a name="L'+jQuery(data).text()+'"/>');
+             });
+        </script>
+    </body>
+</html>

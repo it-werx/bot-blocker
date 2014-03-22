@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <script
+            type="text/javascript"
+            src="../js/jquery-1.4.2.min.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shCore.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shBrushJScript.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shBrushPhp.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shBrushXml.js">
+        </script>
+        <link
+            href="../syntax_highlighter/styles/shCore.css" rel="stylesheet"
+            type="text/css"
+        />
+        <link
+            href="../syntax_highlighter/styles/shCoreEclipse.css"
+            rel="stylesheet" type="text/css"
+        />
+        <link
+            href="../syntax_highlighter/styles/shThemeWordpress.css"
+            rel="stylesheet" type="text/css"
+        />
+    </head>
+    <body>
+        <pre class="brush: php">&lt;?php
+/*
+
+Title: Bot Blocker
+Description: Automatically trap and block bots that don't obey robots.txt rules
+Project URL: http://www.it-werx.net
+Author: Ron Mac Quarrie
+Version: 2.0
+License: GPLv2 or later
+
+This program is free software; you can redistribute it and/or modify it under the 
+terms of the GNU General Public License as published by the Free Software Foundation; 
+either version 2 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+See the GNU General Public License for more details.
+
+Credits: Includes customized/modified versions of these fine scripts:
+ - Network Query Tool @ http://www.drunkwerks.com/docs/NetworkQueryTool/
+ - Kloth.net Bot Trap @ http://www.kloth.net/internet/bottrap.php
+
+*/
+
+$badbot = 0;
+$filename = 'blackhole.dat';
+$ipaddress = $_SERVER['REMOTE_ADDR'];
+
+$fp = fopen($filename, 'r') or die('&lt;p&gt;Error opening file.&lt;/p&gt;');
+while ($line = fgets($fp)) {
+	if (!preg_match(&quot;/(googlebot|slurp|msnbot|teoma|yandex)/i&quot;, $line)) {
+		$u = explode(' ', $line);
+		if ($u[0] == $ipaddress) ++$badbot;
+	}
+}
+fclose($fp);
+
+if ($badbot &gt; 0) {
+	echo '&lt;h1&gt;You have been banned from this domain&lt;/h1&gt;';
+	echo '&lt;p&gt;If you think there has been a mistake, &lt;a href=&quot;/contact/&quot;&gt;contact the administrator&lt;/a&gt; via proxy server.&lt;/p&gt;';
+}
+
+die(); </pre>
+        <script type="text/javascript">
+             SyntaxHighlighter.all();
+             jQuery('.gutter div').each(function(key, data){
+                jQuery(data).prepend('<a name="L'+jQuery(data).text()+'"/>');
+             });
+        </script>
+    </body>
+</html>
