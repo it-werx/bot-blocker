@@ -191,10 +191,13 @@ function blacklist_query($ipaddress){
 } 
  
 if(blacklist_query($ipaddess)){ 
-    die("Your on the blacklist!"); 
+    die("Your on the blacklist!");
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 431231363c2d3706f92af46ef504b89dd6def586
 /**
  * variable_get function.
  * 
@@ -208,4 +211,8 @@ function variable_get($name, $default = NULL) {
 
   return isset($conf[$name]) ? $conf[$name] : $default;
 }
+<<<<<<< HEAD
 ?>
+=======
+?>
+>>>>>>> 431231363c2d3706f92af46ef504b89dd6def586
