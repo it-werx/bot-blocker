@@ -1,35 +1,23 @@
 <?php
 /**
  * @file
- * The PHP page that serves all functions for SQL.
+ * The file that serves all functions for SQL.
+ * @package sqlinterface
+ * @author Ron Mac Quarrie
+ * @link http://www.it-werx.net
+ * @license http://opensource.org/licenses/GPL-3.0
  *
- *
- * All Bot Buster code is released under the GNU General Public License.
- * See COPYRIGHT.txt and LICENSE.txt.
- */
-
-
-/**
- * doc_version
- * 
- * (default value: "0.0.1")
- * 
- * @var string
- * @access public
- */
-$doc_version = "0.0.1";
-
-/*
- * Contributed by;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * See the GNU General Public License for more details.
+ * Contributions by;
  *     Ed Rackham (http://github.com/a1phanumeric/PHP-MySQL-Class)
  *  Changes to Version 0.8.1 copyright (C) 2013
  *	Christopher Harms (http://github.com/neurotroph)
  *
-*/
-
-/**
- * MySQL class.
  */
+
+/** MySQL class. */
 class MySQL {
 
 	// Base variables
@@ -332,13 +320,25 @@ class MySQL {
 		return $this->ExecuteSQL($query);
 	}
 
-	// 'Arrays' a single result
+	
+	/**
+	 * ArrayResult function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function ArrayResult(){
 		$this->arrayedResult = mysql_fetch_assoc($this->result) or die (mysql_error($this->databaseLink));
 		return $this->arrayedResult;
 	}
 
-	// 'Arrays' multiple result
+	
+	/**
+	 * ArrayResults function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function ArrayResults(){
 
 		if($this->records == 1){
@@ -352,7 +352,14 @@ class MySQL {
 		return $this->arrayedResult;
 	}
 
-	// 'Arrays' multiple results with a key
+	
+	/**
+	 * ArrayResultsWithKey function.
+	 * 
+	 * @access public
+	 * @param string $key (default: 'id')
+	 * @return void
+	 */
 	function ArrayResultsWithKey($key='id'){
 		if(isset($this->arrayedResult)){
 			unset($this->arrayedResult);
@@ -366,24 +373,42 @@ class MySQL {
 		return $this->arrayedResult;
 	}
 
-	// Returns last insert ID
+	
+	/**
+	 * LastInsertID function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function LastInsertID(){
 		return mysql_insert_id();
 	}
 
-	// Return number of rows
+	
+	/**
+	 * CountRows function.
+	 * 
+	 * @access public
+	 * @param mixed $from
+	 * @param string $where (default: '')
+	 * @return void
+	 */
 	function CountRows($from, $where=''){
 		$result = $this->Select($from, $where, '', '', false, 'AND','count(*)');
 		return $result["count(*)"];
 	}
 
-	// Closes the connections
+	
+	/**
+	 * CloseConnection function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
 	function CloseConnection(){
 		if($this->databaseLink){
 			mysql_close($this->databaseLink);
 		}
 	}
 }
-
-
 ?>
