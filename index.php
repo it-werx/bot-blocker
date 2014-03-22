@@ -14,7 +14,7 @@
  * See the GNU General Public License for more details.
  *
  */
-define('DOC_ROOT', getcwd());
+
 require_once 'includes/bootstrap.inc.php';
 
 date_default_timezone_set('America/Los_Angeles');
