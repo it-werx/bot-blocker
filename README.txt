@@ -17,5 +17,5 @@ TO DO'S
 4. Add un-ban functionality. Through a captcha form perhaps?
 
 How To;
-1. You will need to do is include "dir/blackhole.php"; into every file you want to run the bot trap.
+1. You will need to include "dir/blackhole.php"; into every file you want to run the bot trap.
 2. Add hidden links into your exposed HTML for the evil bot to follow. It is advisable to add rel="nofollow" as well. This will keep legal bots from being banned as well.
