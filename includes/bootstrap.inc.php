@@ -195,9 +195,12 @@ if(blacklist_query($ipaddess)){
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> 431231363c2d3706f92af46ef504b89dd6def586
+=======
+>>>>>>> FETCH_HEAD
 /**
  * variable_get function.
  * 
@@ -212,7 +215,11 @@ function variable_get($name, $default = NULL) {
   return isset($conf[$name]) ? $conf[$name] : $default;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 ?>
 =======
 ?>
 >>>>>>> 431231363c2d3706f92af46ef504b89dd6def586
+=======
+?>
+>>>>>>> FETCH_HEAD
