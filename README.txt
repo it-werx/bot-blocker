@@ -15,3 +15,7 @@ TO DO'S
 2. Add option if you would like to share your list of IP addresses with the world.
 3. Add DB functionality (not recommended for high traffic sites)
 4. Add un-ban functionality. Through a captcha form perhaps?
+
+How To;
+1. You will need to include "dir/blackhole.php"; into every file you want to run the bot trap.
+2. Add hidden links into your exposed HTML for the evil bot to follow. It is advisable to add rel="nofollow" as well. This will keep legal bots from being banned as well.
