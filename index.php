@@ -1,30 +1,21 @@
 <?php 
-/*
-
-Title: Bot Blocker
-Description: Automatically trap and block bots that don't obey robots.txt rules
-Project URL: http://www.it-werx.net
-Author: Ron Mac Quarrie
-Version: 2.0
-License: GPLv2 or later
-
-This program is free software; you can redistribute it and/or modify it under the 
-terms of the GNU General Public License as published by the Free Software Foundation; 
-either version 2 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-See the GNU General Public License for more details.
-
-Credits: Includes customized/modified versions of these fine scripts:
- - Network Query Tool @ http://www.drunkwerks.com/docs/NetworkQueryTool/
- - Kloth.net Bot Trap @ http://www.kloth.net/internet/bottrap.php
-
-*/
 /**
- * Root directory of installation.
+ * Bot Blocker
+ * @file
+ * @package Bot Blocker
+ * Automatically trap and block bots that don't obey robots.txt rules. Program votes on a list of DNSBL sites then if found the
+ * IP address is found "guilty" it is banned a nd added to the local black list.
+ * @author Ron Mac Quarrie
+ * @link http://www.it-werx.net
+ * @license http://opensource.org/licenses/GPL-3.0
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * See the GNU General Public License for more details.
+ *
  */
 define('DOC_ROOT', getcwd());
+<<<<<<< HEAD
 require_once DOC_ROOT . '/includes/bootstrap.inc';
 
 $from     = 'bot.blocker@yourdomain.com'; // from email
@@ -64,6 +55,9 @@ function sanitize($string) {
 	$string = trim($string); 
 	return $string;
 }
+=======
+require_once DOC_ROOT . '/includes/bootstrap.inc.php';
+>>>>>>> master
 
 /**
  * fp

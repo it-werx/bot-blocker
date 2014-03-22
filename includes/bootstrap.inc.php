@@ -1,14 +1,66 @@
 <?php
 /**
+ * Bot Blocker
  * @file
- * Functions that need to be loaded on every request.
+ * The file for all contants in the project
+ * @api
+ * @package Bot Blocker
+ * Automatically trap and block bots that don't obey robots.txt rules. Program votes on a list of DNSBL sites then if found the
+ * IP address is found "guilty" it is banned a nd added to the local black list.
+ * @author Ron Mac Quarrie
+ * @link http://www.it-werx.net
+ * @license http://opensource.org/licenses/GPL-3.0
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * See the GNU General Public License for more details.
+ *
  */
+namespace bot_blocker;
+/** Defines the VERSION for the entire project. */
+define('VERSION','0.0.1');
  
 /**
- * Defines the VERSION for the entire project.
+ * Constant vars for entire project.
+ *
  */
- define('VERSION','0.0.1');
- 
+//Email configuration
+$from     = 'bot.blocker@yourdomain.com'; // from email
+$recip    = 'webmaster@yourdomain.com'; // to email
+$subject  = 'Bad Bot Alert!';
+//File name to write data to
+$filename = 'blacklist.dat';
+$message  = '';
+//Do a whois lookup?
+$lookup   = '';
+//Number of times visitor is allowed to vist before being black listed.
+$badbot   = 0;
+$request   = sanitize($_SERVER['REQUEST_URI']);
+$ipaddress = get_ip_address();
+$useragent = sanitize($_SERVER['HTTP_USER_AGENT']);
+$protocol  = sanitize($_SERVER['SERVER_PROTOCOL']);
+$method    = sanitize($_SERVER['REQUEST_METHOD']);
+
+
+date_default_timezone_set('America/Los_Angeles');
+$date = date('l, F jS Y @ H:i:s');
+$time = time();
+
+/**
+ * sanitize function.
+ * 
+ * @access public
+ * @param mixed $string
+ * @return void
+ */
+function sanitize($string) {
+	$string = trim($string); 
+	$string = strip_tags($string);
+	$string = htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+	$string = str_replace("\n", "", $string);
+	$string = trim($string); 
+	return $string;
+}
 
 
 /**
@@ -25,7 +77,7 @@
  * only be used, for example, for running unit tests with a clean environment. Should be used only though via function
  * buster_static_reset() and the return value should not be used in this case.
  *
- * @return Returns a variable by reference.
+ * @return $data A variable by reference.
  */
 function &buster_static($name, $default_value = NULL, $reset = FALSE) {
   static $data = array(), $default = array();
@@ -58,12 +110,13 @@ function &buster_static($name, $default_value = NULL, $reset = FALSE) {
   // As the function returns a reference, the return should always be a
   // variable.
   return $data;
-} 
+}
+ 
 /**
  * get_ip_address function.
  * 
  * @access public
- * @return IP address of client machine, adjusted for reverse proxy and/or cluster environments.
+ * @return $ipaddress IP address of client machine, adjusted for reverse proxy and/or cluster environments.
  */
 function get_ip_address() {
   $ipaddress = &buster_static(__FUNCTION__);
@@ -100,6 +153,7 @@ function get_ip_address() {
 }
 
 /**
+<<<<<<< HEAD:includes/bootstrap.inc
  * variable_get function.
  * 
  * @access public
@@ -153,11 +207,21 @@ function variable_del($name) {
 
 
 /**
+=======
+>>>>>>> master:includes/bootstrap.inc.php
  * blacklist_query function.
- * 
+ * You can find a list of DNSBL services @ http://www.dnsbl.info/dnsbl-list.php The idea being the more sites involved in the
+ * proccess the more accurate the outcome.
  * @access public
+<<<<<<< HEAD:includes/bootstrap.inc
  * @param mixed $ipaddress
  * @return Depending on how many sites say that the IP address is a spammer it will pass the variable as true or false.
+=======
+ * @param mixed $ipaddress return the IP address of the visitor. 
+ * @type var array $dnsbl_lookup returns an array of DNSBL sites.
+ * @todo Make $dnsbl_lookup call from a config file for easier editing of the list.   
+ * @return bool Depending on how many sites say that the IP address is a spammer it will pass the variable as true or false.
+>>>>>>> master:includes/bootstrap.inc.php
  */
 function blacklist_query($ipaddress){ 
     $listed = true; 
@@ -187,6 +251,7 @@ function blacklist_query($ipaddress){
     } 
 } 
  
+<<<<<<< HEAD:includes/bootstrap.inc
 if(blacklist_query($ipaddress)){ 
     die("Your on the blacklist!"); 
 }
@@ -250,5 +315,24 @@ $whois = whois_lookup($ipaddress);
 // check target | bugfix
 if (!$ipaddress || !preg_match("/^[\w\d\.\-]+\.[\w\d]{1,4}$/i", $ipaddress)) { 
 	exit('Error: You did not specify a valid target host or IP.');
+=======
+if(blacklist_query($ipaddess)){ 
+    die("Your on the blacklist!"); 
+}
+
+
+/**
+ * variable_get function.
+ * 
+ * @access public
+ * @param mixed $name
+ * @param mixed $default (default: NULL)
+ * @return void
+ */
+function variable_get($name, $default = NULL) {
+  global $conf;
+
+  return isset($conf[$name]) ? $conf[$name] : $default;
+>>>>>>> master:includes/bootstrap.inc.php
 }
 ?>
