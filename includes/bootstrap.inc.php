@@ -250,8 +250,6 @@ function blacklist_query($ipaddress){
         return false; 
     } 
 } 
- 
-<<<<<<< HEAD:includes/bootstrap.inc
 if(blacklist_query($ipaddress)){ 
     die("Your on the blacklist!"); 
 }
@@ -315,7 +313,6 @@ $whois = whois_lookup($ipaddress);
 // check target | bugfix
 if (!$ipaddress || !preg_match("/^[\w\d\.\-]+\.[\w\d]{1,4}$/i", $ipaddress)) { 
 	exit('Error: You did not specify a valid target host or IP.');
-=======
 if(blacklist_query($ipaddess)){ 
     die("Your on the blacklist!");
 }
@@ -332,6 +329,5 @@ function variable_get($name, $default = NULL) {
   global $conf;
 
   return isset($conf[$name]) ? $conf[$name] : $default;
->>>>>>> master:includes/bootstrap.inc.php
 }
 ?>

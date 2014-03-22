@@ -14,7 +14,7 @@
  */
 
 /** variable_cache class. */
-class variable_cache {
+class variable-cache {
 		
 		/**
 		 * variable_set function.

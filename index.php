@@ -15,8 +15,7 @@
  *
  */
 define('DOC_ROOT', getcwd());
-<<<<<<< HEAD
-require_once DOC_ROOT . '/includes/bootstrap.inc';
+require_once DOC_ROOT . '/includes/bootstrap.inc.php';
 
 $from     = 'bot.blocker@yourdomain.com'; // from email
 $recip    = 'webmaster@yourdomain.com'; // to email
@@ -39,7 +38,6 @@ date_default_timezone_set('America/Los_Angeles');
 $date = date('l, F jS Y @ H:i:s');
 $time = time();
 
-
 /**
  * sanitize function.
  * 
@@ -55,9 +53,6 @@ function sanitize($string) {
 	$string = trim($string); 
 	return $string;
 }
-=======
-require_once DOC_ROOT . '/includes/bootstrap.inc.php';
->>>>>>> master
 
 /**
  * fp
@@ -119,6 +114,4 @@ if ($badbot == 0) {
 } else { 
 	die(); 
 }
-
-
 ?>
