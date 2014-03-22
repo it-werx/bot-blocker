@@ -191,6 +191,20 @@ function blacklist_query($ipaddress){
 } 
  
 if(blacklist_query($ipaddess)){ 
-    die("Your on the blacklist!"); 
+    die("Your on the blacklist!");
+}
+
+/**
+ * variable_get function.
+ * 
+ * @access public
+ * @param mixed $name
+ * @param mixed $default (default: NULL)
+ * @return void
+ */
+function variable_get($name, $default = NULL) {
+  global $conf;
+
+  return isset($conf[$name]) ? $conf[$name] : $default;
 }
 ?>
