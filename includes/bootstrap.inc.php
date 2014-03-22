@@ -17,8 +17,9 @@
  *
  */
 namespace bot_blocker;
-/** Defines the VERSION for the entire project. */
+/** Define constant variables for the entire project. */
 define('VERSION','0.0.1');
+define('DOC_ROOT', getcwd());
  
 /**
  * Constant vars for entire project.
@@ -45,23 +46,6 @@ $method    = sanitize($_SERVER['REQUEST_METHOD']);
 date_default_timezone_set('America/Los_Angeles');
 $date = date('l, F jS Y @ H:i:s');
 $time = time();
-
-/**
- * sanitize function.
- * 
- * @access public
- * @param mixed $string
- * @return void
- */
-function sanitize($string) {
-	$string = trim($string); 
-	$string = strip_tags($string);
-	$string = htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
-	$string = str_replace("\n", "", $string);
-	$string = trim($string); 
-	return $string;
-}
-
 
 /**
  * buster_static function.
@@ -153,7 +137,6 @@ function get_ip_address() {
 }
 
 /**
-<<<<<<< HEAD:includes/bootstrap.inc
  * variable_get function.
  * 
  * @access public
@@ -176,7 +159,7 @@ function variable_get($name, $default = NULL) {
  * @param mixed $value
  * @return Set a variable global.
  */
-/*function variable_set($name, $value) {
+function variable_set($name, $value) {
   global $conf;
 
   db_merge('variable')->key(array('name' => $name))->fields(array('value' => serialize($value)))->execute();
@@ -185,7 +168,7 @@ function variable_get($name, $default = NULL) {
 
   $conf[$name] = $value;
 }
-*/
+
 
 
 /**
@@ -207,24 +190,20 @@ function variable_del($name) {
 
 
 /**
-=======
->>>>>>> master:includes/bootstrap.inc.php
  * blacklist_query function.
  * You can find a list of DNSBL services @ http://www.dnsbl.info/dnsbl-list.php The idea being the more sites involved in the
  * proccess the more accurate the outcome.
  * @access public
-<<<<<<< HEAD:includes/bootstrap.inc
  * @param mixed $ipaddress
  * @return Depending on how many sites say that the IP address is a spammer it will pass the variable as true or false.
-=======
  * @param mixed $ipaddress return the IP address of the visitor. 
  * @type var array $dnsbl_lookup returns an array of DNSBL sites.
  * @todo Make $dnsbl_lookup call from a config file for easier editing of the list.   
  * @return bool Depending on how many sites say that the IP address is a spammer it will pass the variable as true or false.
->>>>>>> master:includes/bootstrap.inc.php
  */
 function blacklist_query($ipaddress){ 
-    $listed = true; 
+    $listed = true;
+    // Add your preferred list of DNSBL's 
     $dnsbl_lookup = array( 
         "dnsbl-1.uceprotect.net", 
         "dnsbl-2.uceprotect.net", 
@@ -232,7 +211,7 @@ function blacklist_query($ipaddress){
         "dnsbl.dronebl.org", 
         "dnsbl.sorbs.net", 
         "zen.spamhaus.org" 
-    ); // Add your preferred list of DNSBL's 
+    ); 
     $lookups = count($dnsbl_lookup); 
     $total = 0; 
     if($ipaddress){ 
@@ -250,8 +229,6 @@ function blacklist_query($ipaddress){
         return false; 
     } 
 } 
- 
-<<<<<<< HEAD:includes/bootstrap.inc
 if(blacklist_query($ipaddress)){ 
     die("Your on the blacklist!"); 
 }
@@ -315,23 +292,24 @@ $whois = whois_lookup($ipaddress);
 // check target | bugfix
 if (!$ipaddress || !preg_match("/^[\w\d\.\-]+\.[\w\d]{1,4}$/i", $ipaddress)) { 
 	exit('Error: You did not specify a valid target host or IP.');
-=======
+	}
 if(blacklist_query($ipaddess)){ 
     die("Your on the blacklist!");
 }
 
 /**
- * variable_get function.
+ * sanitize function.
  * 
  * @access public
- * @param mixed $name
- * @param mixed $default (default: NULL)
+ * @param mixed $string
  * @return void
  */
-function variable_get($name, $default = NULL) {
-  global $conf;
-
-  return isset($conf[$name]) ? $conf[$name] : $default;
->>>>>>> master:includes/bootstrap.inc.php
+function sanitize($string) {
+	$string = trim($string); 
+	$string = strip_tags($string);
+	$string = htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+	$string = str_replace("\n", "", $string);
+	$string = trim($string); 
+	return $string;
 }
 ?>

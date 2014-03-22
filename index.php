@@ -15,49 +15,11 @@
  *
  */
 define('DOC_ROOT', getcwd());
-<<<<<<< HEAD
-require_once DOC_ROOT . '/includes/bootstrap.inc';
-
-$from     = 'bot.blocker@yourdomain.com'; // from email
-$recip    = 'webmaster@yourdomain.com'; // to email
-$subject  = 'Bad Bot Alert!';
-$filename = 'blackhole.dat'; //File name to write to. Make sure that you give the WWW server permision to write to this file.
-$message  = '';
-//Do a whois lookup?
-$lookup   = '';
-$badbot   = 0;
-
-$request   = sanitize($_SERVER['REQUEST_URI']);
-//sanitize($_SERVER['REMOTE_ADDR']);
-$ipaddress = get_ip_address();
-$useragent = sanitize($_SERVER['HTTP_USER_AGENT']);
-$protocol  = sanitize($_SERVER['SERVER_PROTOCOL']);
-$method    = sanitize($_SERVER['REQUEST_METHOD']);
-
+require_once 'includes/bootstrap.inc.php';
 
 date_default_timezone_set('America/Los_Angeles');
 $date = date('l, F jS Y @ H:i:s');
 $time = time();
-
-
-/**
- * sanitize function.
- * 
- * @access public
- * @param mixed $string
- * @return void
- */
-function sanitize($string) {
-	$string = trim($string); 
-	$string = strip_tags($string);
-	$string = htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
-	$string = str_replace("\n", "", $string);
-	$string = trim($string); 
-	return $string;
-}
-=======
-require_once DOC_ROOT . '/includes/bootstrap.inc.php';
->>>>>>> master
 
 /**
  * fp
@@ -119,6 +81,4 @@ if ($badbot == 0) {
 } else { 
 	die(); 
 }
-
-
 ?>
