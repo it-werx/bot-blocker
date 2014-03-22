@@ -1,0 +1,457 @@
+<html>
+    <head>
+        <script
+            type="text/javascript"
+            src="../../js/jquery-1.4.2.min.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../../syntax_highlighter/scripts/shCore.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../../syntax_highlighter/scripts/shBrushJScript.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../../syntax_highlighter/scripts/shBrushPhp.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../../syntax_highlighter/scripts/shBrushXml.js">
+        </script>
+        <link
+            href="../../syntax_highlighter/styles/shCore.css" rel="stylesheet"
+            type="text/css"
+        />
+        <link
+            href="../../syntax_highlighter/styles/shCoreEclipse.css"
+            rel="stylesheet" type="text/css"
+        />
+        <link
+            href="../../syntax_highlighter/styles/shThemeWordpress.css"
+            rel="stylesheet" type="text/css"
+        />
+    </head>
+    <body>
+        <pre class="brush: php">&lt;?php
+/**
+ * @file
+ * The file that serves all functions for SQL.
+ */
+
+/**
+ * Contributed by;
+ *     Ed Rackham (http://github.com/a1phanumeric/PHP-MySQL-Class)
+ *  Changes to Version 0.8.1 copyright (C) 2013
+ *	Christopher Harms (http://github.com/neurotroph)
+ *
+ */
+
+/**
+ * MySQL class.
+ */
+class MySQL {
+
+	// Base variables
+	var $lastError;					// Holds the last error
+	var $lastQuery;					// Holds the last query
+	var $result;						// Holds the MySQL query result
+	var $records;						// Holds the total number of records returned
+	var $affected;					// Holds the total number of records affected
+	var $rawResults;				// Holds raw 'arrayed' results
+	var $arrayedResult;			// Holds an array of the result
+
+	var $hostname;	// MySQL Hostname
+	var $username;	// MySQL Username
+	var $password;	// MySQL Password
+	var $database;	// MySQL Database
+
+	var $databaseLink;		// Database Connection Link
+
+
+
+	/**
+	 * __construct function.
+	 * 
+	 * @access public
+	 * @param mixed $database
+	 * @param mixed $username
+	 * @param mixed $password
+	 * @param string $hostname (default: 'localhost')
+	 * @param int $port (default: 3306)
+	 * @return void
+	 */
+	function __construct($database, $username, $password, $hostname='localhost', $port=3306){
+		$this-&gt;database = $database;
+		$this-&gt;username = $username;
+		$this-&gt;password = $password;
+		$this-&gt;hostname = $hostname.':'.$port;
+
+		$this-&gt;Connect();
+	}
+	/**
+	 * Connect function.
+	 * 
+	 * @access private
+	 * @param bool $persistant (default: false)
+	 * @return void
+	 */
+	private function Connect($persistant = false){
+		$this-&gt;CloseConnection();
+
+		if($persistant){
+			$this-&gt;databaseLink = mysql_pconnect($this-&gt;hostname, $this-&gt;username, $this-&gt;password);
+		}else{
+			$this-&gt;databaseLink = mysql_connect($this-&gt;hostname, $this-&gt;username, $this-&gt;password);
+		}
+
+		if(!$this-&gt;databaseLink){
+   		$this-&gt;lastError = 'Could not connect to server: ' . mysql_error($this-&gt;databaseLink);
+			return false;
+		}
+
+		if(!$this-&gt;UseDB()){
+			$this-&gt;lastError = 'Could not connect to database: ' . mysql_error($this-&gt;databaseLink);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * UseDB function.
+	 * 
+	 * @access private
+	 * @return Database connection made or not
+	 */
+	private function UseDB(){
+		if(!mysql_select_db($this-&gt;database, $this-&gt;databaseLink)){
+			$this-&gt;lastError = 'Cannot select database: ' . mysql_error($this-&gt;databaseLink);
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+	/**
+	 * SecureData function.
+	 * 
+	 * @access private
+	 * @param mixed $data
+	 * @return Return $data in s secure fashion.
+	 */
+	private function SecureData($data){
+		if(is_array($data)){
+			foreach($data as $key=&gt;$val){
+				if(!is_array($data[$key])){
+					$data[$key] = mysql_real_escape_string($data[$key], $this-&gt;databaseLink);
+				}
+			}
+		}else{
+			$data = mysql_real_escape_string($data, $this-&gt;databaseLink);
+		}
+		return $data;
+	}
+
+	/**
+	 * ExecuteSQL function.
+	 * 
+	 * @access public
+	 * @param mixed $query
+	 * @return Return results of the SQL connection
+	 */
+	function ExecuteSQL($query){
+		$this-&gt;lastQuery 	= $query;
+		if($this-&gt;result 	= mysql_query($query, $this-&gt;databaseLink)){
+			$this-&gt;records 	= @mysql_num_rows($this-&gt;result);
+			$this-&gt;affected	= @mysql_affected_rows($this-&gt;databaseLink);
+
+			if($this-&gt;records &gt; 0){
+                         $this-&gt;ArrayResults();
+                         return $this-&gt;arrayedResult;
+                        }else{
+                         return true;
+                        }
+
+		}else{
+			$this-&gt;lastError = mysql_error($this-&gt;databaseLink);
+			return false;
+		}
+	}
+	
+	/**
+	 * Insert function.
+	 * 
+	 * @access public
+	 * @param mixed $vars
+	 * @param mixed $table
+	 * @param string $exclude (default: '')
+	 * @return Adds a record to the database based on the array key name
+	 */
+	function Insert($vars, $table, $exclude = ''){
+
+		// Catch Exclusions
+		if($exclude == ''){
+			$exclude = array();
+		}
+
+		array_push($exclude, 'MAX_FILE_SIZE'); // Automatically exclude this one
+
+		// Prepare Variables
+		$vars = $this-&gt;SecureData($vars);
+
+		$query = &quot;INSERT INTO `{$table}` SET &quot;;
+		foreach($vars as $key=&gt;$value){
+			if(in_array($key, $exclude)){
+				continue;
+			}
+			//$query .= '`' . $key . '` = &quot;' . $value . '&quot;, ';
+			$query .= &quot;`{$key}` = '{$value}', &quot;;
+		}
+
+		$query = substr($query, 0, -2);
+
+		return $this-&gt;ExecuteSQL($query);
+	}
+
+	/**
+	 * Delete function.
+	 * 
+	 * @access public
+	 * @param mixed $table
+	 * @param string $where (default: '')
+	 * @param string $limit (default: '')
+	 * @param bool $like (default: false)
+	 * @return Deletes a record from the database
+	 */
+	function Delete($table, $where='', $limit='', $like=false){
+		$query = &quot;DELETE FROM `{$table}` WHERE &quot;;
+		if(is_array($where) &amp;&amp; $where != ''){
+			// Prepare Variables
+			$where = $this-&gt;SecureData($where);
+
+			foreach($where as $key=&gt;$value){
+				if($like){
+					//$query .= '`' . $key . '` LIKE &quot;%' . $value . '%&quot; AND ';
+					$query .= &quot;`{$key}` LIKE '%{$value}%' AND &quot;;
+				}else{
+					//$query .= '`' . $key . '` = &quot;' . $value . '&quot; AND ';
+					$query .= &quot;`{$key}` = '{$value}' AND &quot;;
+				}
+			}
+
+			$query = substr($query, 0, -5);
+		}
+
+		if($limit != ''){
+			$query .= ' LIMIT ' . $limit;
+		}
+
+		return $this-&gt;ExecuteSQL($query);
+	}
+
+	/**
+	 * Select function.
+	 * 
+	 * @access public
+	 * @param mixed $from
+	 * @param string $where (default: '')
+	 * @param string $orderBy (default: '')
+	 * @param string $limit (default: '')
+	 * @param bool $like (default: false)
+	 * @param string $operand (default: 'AND')
+	 * @param string $cols (default: '*')
+	 * @return Gets a single row from $from where $where is true
+	 */
+	function Select($from, $where='', $orderBy='', $limit='', $like=false, $operand='AND',$cols='*'){
+		// Catch Exceptions
+		if(trim($from) == ''){
+			return false;
+		}
+
+		$query = &quot;SELECT {$cols} FROM `{$from}` WHERE &quot;;
+
+		if(is_array($where) &amp;&amp; $where != ''){
+			// Prepare Variables
+			$where = $this-&gt;SecureData($where);
+
+			foreach($where as $key=&gt;$value){
+				if($like){
+					//$query .= '`' . $key . '` LIKE &quot;%' . $value . '%&quot; ' . $operand . ' ';
+					$query .= &quot;`{$key}` LIKE '%{$value}%' {$operand} &quot;;
+				}else{
+					//$query .= '`' . $key . '` = &quot;' . $value . '&quot; ' . $operand . ' ';
+					$query .= &quot;`{$key}` = '{$value}' {$operand} &quot;;
+				}
+			}
+
+			$query = substr($query, 0, -(strlen($operand)+2));
+
+		}else{
+			$query = substr($query, 0, -6);
+		}
+
+		if($orderBy != ''){
+			$query .= ' ORDER BY ' . $orderBy;
+		}
+
+		if($limit != ''){
+			$query .= ' LIMIT ' . $limit;
+		}
+
+		return $this-&gt;ExecuteSQL($query);
+
+	}
+
+	/**
+	 * Update function.
+	 * 
+	 * @access public
+	 * @param mixed $table
+	 * @param mixed $set
+	 * @param mixed $where
+	 * @param string $exclude (default: '')
+	 * @return Update a record in the database based on WHERE
+	 */
+	function Update($table, $set, $where, $exclude = ''){
+		// Catch Exceptions
+		if(trim($table) == '' || !is_array($set) || !is_array($where)){
+			return false;
+		}
+		if($exclude == ''){
+			$exclude = array();
+		}
+
+		array_push($exclude, 'MAX_FILE_SIZE'); // Automatically exclude this one
+
+		$set 		= $this-&gt;SecureData($set);
+		$where 	= $this-&gt;SecureData($where);
+
+		// SET
+
+		$query = &quot;UPDATE `{$table}` SET &quot;;
+
+		foreach($set as $key=&gt;$value){
+			if(in_array($key, $exclude)){
+				continue;
+			}
+			$query .= &quot;`{$key}` = '{$value}', &quot;;
+		}
+
+		$query = substr($query, 0, -2);
+
+		// WHERE
+
+		$query .= ' WHERE ';
+
+		foreach($where as $key=&gt;$value){
+			$query .= &quot;`{$key}` = '{$value}' AND &quot;;
+		}
+
+		$query = substr($query, 0, -5);
+
+		return $this-&gt;ExecuteSQL($query);
+	}
+
+	
+	/**
+	 * ArrayResult function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	function ArrayResult(){
+		$this-&gt;arrayedResult = mysql_fetch_assoc($this-&gt;result) or die (mysql_error($this-&gt;databaseLink));
+		return $this-&gt;arrayedResult;
+	}
+
+	
+	/**
+	 * ArrayResults function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	function ArrayResults(){
+
+		if($this-&gt;records == 1){
+			return $this-&gt;ArrayResult();
+		}
+
+		$this-&gt;arrayedResult = array();
+		while ($data = mysql_fetch_assoc($this-&gt;result)){
+			$this-&gt;arrayedResult[] = $data;
+		}
+		return $this-&gt;arrayedResult;
+	}
+
+	
+	/**
+	 * ArrayResultsWithKey function.
+	 * 
+	 * @access public
+	 * @param string $key (default: 'id')
+	 * @return void
+	 */
+	function ArrayResultsWithKey($key='id'){
+		if(isset($this-&gt;arrayedResult)){
+			unset($this-&gt;arrayedResult);
+		}
+		$this-&gt;arrayedResult = array();
+		while($row = mysql_fetch_assoc($this-&gt;result)){
+			foreach($row as $theKey =&gt; $theValue){
+				$this-&gt;arrayedResult[$row[$key]][$theKey] = $theValue;
+			}
+		}
+		return $this-&gt;arrayedResult;
+	}
+
+	
+	/**
+	 * LastInsertID function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	function LastInsertID(){
+		return mysql_insert_id();
+	}
+
+	
+	/**
+	 * CountRows function.
+	 * 
+	 * @access public
+	 * @param mixed $from
+	 * @param string $where (default: '')
+	 * @return void
+	 */
+	function CountRows($from, $where=''){
+		$result = $this-&gt;Select($from, $where, '', '', false, 'AND','count(*)');
+		return $result[&quot;count(*)&quot;];
+	}
+
+	
+	/**
+	 * CloseConnection function.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	function CloseConnection(){
+		if($this-&gt;databaseLink){
+			mysql_close($this-&gt;databaseLink);
+		}
+	}
+}
+
+
+?&gt;</pre>
+        <script type="text/javascript">
+             SyntaxHighlighter.all();
+             jQuery('.gutter div').each(function(key, data){
+                jQuery(data).prepend('<a name="L'+jQuery(data).text()+'"/>');
+             });
+        </script>
+    </body>
+</html>

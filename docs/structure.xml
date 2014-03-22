@@ -1,0 +1,798 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project title="API Documentation" version="2.3.1&#10;">
+  <partials/>
+  <file path="includes/bootstrap.inc.php" generated-path="includes.bootstrap.inc.html" hash="0ed7e8cbb7b1d4fb02c9d78f80c48fe8" package="">
+    <docblock line="0">
+      <description></description>
+      <long-description></long-description>
+      <tag name="file" line="0" description="bootstrap.inc.php"/>
+      <tag name="package" line="0" description="Bot Blocker&#10;Automatically trap and block bots that don't obey robots.txt rules. Program votes on a list of DNSBL sites then if found the&#10;IP address is found &quot;guilty&quot; it is banned a nd added to the local black list."/>
+      <tag name="author" line="0" description="Ron Mac Quarrie"/>
+      <tag name="link" line="0" description="http://www.it-werx.net" link="http://www.it-werx.net"/>
+      <tag name="license" line="0" description="http://opensource.org/licenses/GPL-3.0&#10;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; &#10;without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. &#10;See the GNU General Public License for more details."/>
+    </docblock>
+    <constant namespace="\" line="20" package="">
+      <name>VERSION</name>
+      <full_name>\\VERSION</full_name>
+      <value>'0.0.1'</value>
+      <docblock line="20">
+        <description>Defines the VERSION for the entire project.</description>
+        <long-description></long-description>
+      </docblock>
+    </constant>
+    <function namespace="" line="40" package="">
+      <name>buster_static</name>
+      <full_name>\buster_static()</full_name>
+      <docblock line="40">
+        <description>buster_static function.</description>
+        <long-description></long-description>
+        <tag name="access" line="40" description="public"/>
+        <tag name="param" line="40" description="&lt;p&gt;Globally unique name for the variable. For a function with only one static, variable, the function name&#10;(e.g. via the PHP magic &lt;strong&gt;FUNCTION&lt;/strong&gt; constant) is recommended. For a function with multiple static variables add a&#10;distinguishing suffix to the function name for each one.&lt;/p&gt;" type="mixed" variable="$name">
+          <type>mixed</type>
+        </tag>
+        <tag name="param" line="40" description="&lt;p&gt;Optional default value.&lt;/p&gt;" type="mixed" variable="$default_value">
+          <type>mixed</type>
+        </tag>
+        <tag name="param" line="40" description="&lt;p&gt;TRUE to reset a specific named variable, or all variables if $name is NULL. Resetting every variable should&#10;only be used, for example, for running unit tests with a clean environment. Should be used only though via function&#10;buster_static_reset() and the return value should not be used in this case.&lt;/p&gt;" type="mixed" variable="$reset">
+          <type>mixed</type>
+        </tag>
+        <tag name="return" line="40" description="A variable by reference." type="\$data">
+          <type>\$data</type>
+        </tag>
+      </docblock>
+      <argument line="0" by_reference="false">
+        <name>$name</name>
+        <default></default>
+        <type>mixed</type>
+      </argument>
+      <argument line="0" by_reference="false">
+        <name>$default_value</name>
+        <default>NULL</default>
+        <type>mixed</type>
+      </argument>
+      <argument line="0" by_reference="false">
+        <name>$reset</name>
+        <default>FALSE</default>
+        <type>mixed</type>
+      </argument>
+    </function>
+    <function namespace="" line="78" package="">
+      <name>get_ip_address</name>
+      <full_name>\get_ip_address()</full_name>
+      <docblock line="78">
+        <description>get_ip_address function.</description>
+        <long-description></long-description>
+        <tag name="access" line="78" description="public"/>
+        <tag name="return" line="78" description="IP address of client machine, adjusted for reverse proxy and/or cluster environments." type="\$ipaddress">
+          <type>\$ipaddress</type>
+        </tag>
+      </docblock>
+    </function>
+    <function namespace="" line="120" package="">
+      <name>variable_get</name>
+      <full_name>\variable_get()</full_name>
+      <docblock line="120">
+        <description>variable_get function.</description>
+        <long-description></long-description>
+        <tag name="access" line="120" description="public"/>
+        <tag name="param" line="120" description="" type="mixed" variable="$name">
+          <type>mixed</type>
+        </tag>
+        <tag name="param" line="120" description="&lt;p&gt;(default: NULL)&lt;/p&gt;" type="mixed" variable="$default">
+          <type>mixed</type>
+        </tag>
+        <tag name="return" line="120" description="Retrieve a variable." type="\$conf[array]">
+          <type>\$conf[array]</type>
+        </tag>
+      </docblock>
+      <argument line="0" by_reference="false">
+        <name>$name</name>
+        <default></default>
+        <type>mixed</type>
+      </argument>
+      <argument line="0" by_reference="false">
+        <name>$default</name>
+        <default>NULL</default>
+        <type>mixed</type>
+      </argument>
+    </function>
+    <function namespace="" line="135" package="">
+      <name>variable_set</name>
+      <full_name>\variable_set()</full_name>
+      <docblock line="135">
+        <description>variable_set function.</description>
+        <long-description></long-description>
+        <tag name="access" line="135" description="public"/>
+        <tag name="param" line="135" description="" type="mixed" variable="$name">
+          <type>mixed</type>
+        </tag>
+        <tag name="param" line="135" description="" type="mixed" variable="$value">
+          <type>mixed</type>
+        </tag>
+        <tag name="return" line="135" description="Set a variable global." type="\$value">
+          <type>\$value</type>
+        </tag>
+      </docblock>
+      <argument line="0" by_reference="false">
+        <name>$name</name>
+        <default></default>
+        <type>mixed</type>
+      </argument>
+      <argument line="0" by_reference="false">
+        <name>$value</name>
+        <default></default>
+        <type>mixed</type>
+      </argument>
+    </function>
+    <function namespace="" line="154" package="">
+      <name>variable_del</name>
+      <full_name>\variable_del()</full_name>
+      <docblock line="154">
+        <description>variable_del function.</description>
+        <long-description></long-description>
+        <tag name="access" line="154" description="public"/>
+        <tag name="param" line="154" description="&lt;p&gt;Name of the variable&lt;/p&gt;" type="mixed" variable="$name">
+          <type>mixed</type>
+        </tag>
+        <tag name="return" line="154" description="Delete a variable from cached variables." type="\$conf[$name]">
+          <type>\$conf[$name]</type>
+        </tag>
+      </docblock>
+      <argument line="0" by_reference="false">
+        <name>$name</name>
+        <default></default>
+        <type>mixed</type>
+      </argument>
+    </function>
+    <function namespace="" line="175" package="">
+      <name>blacklist_query</name>
+      <full_name>\blacklist_query()</full_name>
+      <docblock line="175">
+        <description>blacklist_query function.</description>
+        <long-description>You can find a list of DNSBL services @ http://www.dnsbl.info/dnsbl-list.php The idea being the more sites involved in the
+proccess the more accurate the outcome.</long-description>
+        <tag name="access" line="175" description="public"/>
+        <tag name="param" line="175" description="&lt;p&gt;return the IP address of the visitor.&lt;/p&gt;" type="mixed" variable="$ipaddress">
+          <type>mixed</type>
+        </tag>
+        <tag name="type" line="175" description="var array $dnsbl_lookup returns an array of DNSBL sites."/>
+        <tag name="todo" line="175" description="Make $dnsbl_lookup call from a config file for easier editing of the list."/>
+        <tag name="return" line="175" description="Depending on how many sites say that the IP address is a spammer it will pass the variable as true or false." type="bool">
+          <type>bool</type>
+        </tag>
+      </docblock>
+      <argument line="0" by_reference="false">
+        <name>$ipaddress</name>
+        <default></default>
+        <type>mixed</type>
+      </argument>
+    </function>
+    <markers>
+      <todo line="175">Make $dnsbl_lookup call from a config file for easier editing of the list.</todo>
+    </markers>
+    <parse_markers>
+      <error line="0" code="PPC:ERR-50000">No summary was found for this file</error>
+    </parse_markers>
+    <source>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</source>
+  </file>
+  <file path="docs/ajax_search.php" generated-path="docs.ajax_search.html" hash="e693b887d537750ce5893e956a54d607" package="">
+    <docblock line="0">
+      <description>phpDocumentor</description>
+      <long-description>PHP Version 5</long-description>
+      <tag name="category" line="0" description="phpDocumentor"/>
+      <tag name="package" line="0" description="Search"/>
+      <tag name="author" line="0" description="Mike van Riel" link="mailto:mike.vanriel@naenius.com"/>
+      <tag name="copyright" line="0" description="2010-2011 Mike van Riel / Naenius (http://www.naenius.com)"/>
+      <tag name="license" line="0" description="MIT" link="http://www.opensource.org/licenses/mit-license.php"/>
+      <tag name="link" line="0" description="http://phpdoc.org" link="http://phpdoc.org"/>
+    </docblock>
+    <source>eJyNkmtP2zAUhr/nVxxVleJUJIFJ+8KlYwwGbLR00DG2qkJeYhKviZ3aTkuG+O87dkNBGxKzoijn8rw+l+y+q/LKi3s9D3qAn4cyqUsmjFTosL7RyQiumNJcCnjb+vYTalgmVQP/ILBf0WRGMwYAl4yqJHdOWptcKvTBgM8YLKiAC84K2C3RjNBUaO0LygSvdZTIsr+6R1aN4llu4M3m1maIr62/BGIYriAguTHVdhwvl8vomVDghAqeMKFtUc+yZIU+WauERVJlcZuj45KbsDUi7A8Gp+NWRMzAnVYEg6lMLIzx2PPiGDJmQLu+wTBVel37hj3QRhlZyCVTpHtzfDSe+DbgT4Mdh91ykToAuIDrwRmk7VC97l1ZIC/YEg7PB4+zJsjZSNgvJE2Jv7ryBlXYXYR+38UravIn9nqEJrGUvbQ7x/XtwSop7M9rphri2eY6cbygRc0miRSGcqGJUVToAndOog3w3x98ODz6eHxy+unz2WB4PvpycTn+evXt+vsPfwM6TiKCjk9/Jim7zXL+a1aUQlZzpU29WN41v/0AVdxg/GAaR1HHs9UqpuvCaKyJKkUb4ibTw7EvqLLlHxXMdg5d1n7gxG+lYhRHTVw3VK+DAdy7Qp4EZDmUKTvjGhVce2AFbM6jiWdvLRD2cZPtlfqgGdNsSEtGfJdrp+tInkJ7Xid5usZMU7H/xWzuGmxnNJki6N9Dx1XT2cZp48hpmuKSdM40WbUU9rlhJdkMwr7A3q+sL2j343dwVzx9ieXpq6At6iXU+l+EHQgP/o734HksySX4EwvzsiowieCfg89jfy59isl/ACqIaJw=</source>
+  </file>
+  <file path="blackhole.php" generated-path="blackhole.html" hash="14544e6c139df2101c5d03b6d935a179" package="">
+    <docblock line="0">
+      <description></description>
+      <long-description></long-description>
+    </docblock>
+    <parse_markers>
+      <error line="0" code="PPC:ERR-50000">No summary was found for this file</error>
+    </parse_markers>
+    <source>eJyFVFFv2zYQfi5/xTUwILtNpSyPtuPNSZzUqON4stwiKIqAlk4WZ4oUSCq21vS/7yjb3YY97E3kHb/7vrvvNPy1KioWvWMsEU5iH661g2up0y0ados2NaJyQqs+jGunS+5EyqVswBleAVcZrH0urLWz4AruINMqcKDX2IDR/jp0ewemlmjZwug/MHWwimd9KJyr+lG02+1C4T7s0OxDhY5RmUKbPsRawQNP4feaGyOQfUZjWx6X4QWbiRSVJbb3i9nLJWgDkjsizJJCWKiM3hheAn3mBhGszt2OGxxAo2tIuQKDmbDOiHXtEITzQiICKXUm8sZf1CpDQ4IQGOGWFnTenu7nK7hHhYZLWNRrKVI4cgFOhf2NLZC60rTpd7788lge7jTBct/NATAUlGDg5SALLk8VjnDnXlSX+kmUDeh2Bj3i2RyUnt6F/5X8t7IMhGoxC13hYTokbSekhDVCbTGv5TlQJnyZJh8fVwmM50/wZRzH43nyRBx3xFFTGF/wACTKSgrCJTmGK9d40g+T+OYjPRhfT2fT5Mnzvpsm88lyCXePMYxhMY6T6c1qNo5hsYoXj8tJCGyJ+H8NzduJUN8ydFxIS1pv/OCc7cNUpbLO0EJaW7Kl+BOzqJ2eZ3fszWloHkooskHrZdtn8AHm6HbabMldaBpItJbw2z8dmZlabcmTWxumuowyndro+KZ94l9EHuiT1K7wxm0XJ/Fb8S+g7SkeCUVz8x+0FH57Qr947F3EWGfNM7qEK7gYsE4uJCpeIh2DteTpttASQ/JNQEFR8SwzaC1FO8/LSfx5En8N4snDYzJ5Ht/exsG3AQHmFcVzmrrq/sQ7h8AEPT+eTGA3GFajiTHaewuVUBvweeEwqkZBb8B2BZ2g25G+cQS1QWcJqur14Dt7I3Lovq0Mbp7ph5AW3bOou9F6I5FUvFpZm+q1tMofHNI/47Wh/cJ9LxJn59BCHmDedGrCxn0ldUaMIDhFBxTzNTr114tvcEVSf+ruwfv3x35R1g/2g+Wp1BZbciS9fXbs5wgu2jqYFhqCYfHL6In2v+AvSP4nR6+5UmSX3OiSfOJXh8gKNYwok5p9eleNpnn756ActfWOIk8WtO4tCIeSFo5vqb9DDoXB/OosSrVyPHXR2ej41XqdZ6VQfju502YY8RG8CO5Xd9+ARUO2PfR/QKqYH1JvAH8B3czgXA==</source>
+  </file>
+  <file path="index.php" generated-path="index.html" hash="7608dc7aa42abde390fa5676d5cf91c8" package="">
+    <docblock line="0">
+      <description></description>
+      <long-description></long-description>
+    </docblock>
+    <constant namespace="\" line="23" package="">
+      <name>DOC_ROOT</name>
+      <full_name>\\DOC_ROOT</full_name>
+      <value>getcwd()</value>
+      <docblock line="23">
+        <description></description>
+        <long-description></long-description>
+      </docblock>
+    </constant>
+    <function namespace="" line="55" package="">
+      <name>sanitize</name>
+      <full_name>\sanitize()</full_name>
+      <docblock line="55">
+        <description>sanitize function.</description>
+        <long-description></long-description>
+        <tag name="access" line="55" description="public"/>
+        <tag name="param" line="55" description="" type="mixed" variable="$string">
+          <type>mixed</type>
+        </tag>
+        <tag name="return" line="55" description="" type="void">
+          <type>void</type>
+        </tag>
+      </docblock>
+      <argument line="0" by_reference="false">
+        <name>$string</name>
+        <default></default>
+        <type>mixed</type>
+      </argument>
+    </function>
+    <parse_markers>
+      <error line="0" code="PPC:ERR-50000">No summary was found for this file</error>
+    </parse_markers>
+    <source>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</source>
+  </file>
+  <file path="includes/sql.inc.php" generated-path="includes.sql.inc.html" hash="ecca781b93ecc23cc9de6fe6afa41db1" package="">
+    <docblock line="0">
+      <description></description>
+      <long-description></long-description>
+      <tag name="file" line="0" description="The file that serves all functions for SQL."/>
+    </docblock>
+    <class final="false" abstract="false" namespace="" line="18" package="">
+      <extends/>
+      <name>MySQL</name>
+      <full_name>\MySQL</full_name>
+      <docblock line="18">
+        <description>MySQL class.</description>
+        <long-description></long-description>
+      </docblock>
+      <property static="false" visibility="public" namespace="" line="21" package="">
+        <name>$lastError</name>
+        <full_name>\MySQL::lastError</full_name>
+        <default></default>
+        <docblock line="21">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="public" namespace="" line="22" package="">
+        <name>$lastQuery</name>
+        <full_name>\MySQL::lastQuery</full_name>
+        <default></default>
+        <docblock line="22">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="public" namespace="" line="23" package="">
+        <name>$result</name>
+        <full_name>\MySQL::result</full_name>
+        <default></default>
+        <docblock line="23">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="public" namespace="" line="24" package="">
+        <name>$records</name>
+        <full_name>\MySQL::records</full_name>
+        <default></default>
+        <docblock line="24">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="public" namespace="" line="25" package="">
+        <name>$affected</name>
+        <full_name>\MySQL::affected</full_name>
+        <default></default>
+        <docblock line="25">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="public" namespace="" line="26" package="">
+        <name>$rawResults</name>
+        <full_name>\MySQL::rawResults</full_name>
+        <default></default>
+        <docblock line="26">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="public" namespace="" line="27" package="">
+        <name>$arrayedResult</name>
+        <full_name>\MySQL::arrayedResult</full_name>
+        <default></default>
+        <docblock line="27">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="public" namespace="" line="29" package="">
+        <name>$hostname</name>
+        <full_name>\MySQL::hostname</full_name>
+        <default></default>
+        <docblock line="29">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="public" namespace="" line="30" package="">
+        <name>$username</name>
+        <full_name>\MySQL::username</full_name>
+        <default></default>
+        <docblock line="30">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="public" namespace="" line="31" package="">
+        <name>$password</name>
+        <full_name>\MySQL::password</full_name>
+        <default></default>
+        <docblock line="31">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="public" namespace="" line="32" package="">
+        <name>$database</name>
+        <full_name>\MySQL::database</full_name>
+        <default></default>
+        <docblock line="32">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="public" namespace="" line="34" package="">
+        <name>$databaseLink</name>
+        <full_name>\MySQL::databaseLink</full_name>
+        <default></default>
+        <docblock line="34">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="49" package="">
+        <name>__construct</name>
+        <full_name>\MySQL::__construct()</full_name>
+        <docblock line="49">
+          <description>__construct function.</description>
+          <long-description></long-description>
+          <tag name="access" line="49" description="public"/>
+          <tag name="param" line="49" description="" type="mixed" variable="$database">
+            <type>mixed</type>
+          </tag>
+          <tag name="param" line="49" description="" type="mixed" variable="$username">
+            <type>mixed</type>
+          </tag>
+          <tag name="param" line="49" description="" type="mixed" variable="$password">
+            <type>mixed</type>
+          </tag>
+          <tag name="param" line="49" description="&lt;p&gt;(default: 'localhost')&lt;/p&gt;" type="string" variable="$hostname">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="49" description="&lt;p&gt;(default: 3306)&lt;/p&gt;" type="int" variable="$port">
+            <type>int</type>
+          </tag>
+          <tag name="return" line="49" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$database</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$username</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$password</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$hostname</name>
+          <default>'localhost'</default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$port</name>
+          <default>3306</default>
+          <type>int</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="" line="64" package="">
+        <name>Connect</name>
+        <full_name>\MySQL::Connect()</full_name>
+        <docblock line="64">
+          <description>Connect function.</description>
+          <long-description></long-description>
+          <tag name="access" line="64" description="private"/>
+          <tag name="param" line="64" description="&lt;p&gt;(default: false)&lt;/p&gt;" type="bool" variable="$persistant">
+            <type>bool</type>
+          </tag>
+          <tag name="return" line="64" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$persistant</name>
+          <default>false</default>
+          <type>bool</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="" line="91" package="">
+        <name>UseDB</name>
+        <full_name>\MySQL::UseDB()</full_name>
+        <docblock line="91">
+          <description>UseDB function.</description>
+          <long-description></long-description>
+          <tag name="access" line="91" description="private"/>
+          <tag name="return" line="91" description="connection made or not" type="\Database">
+            <type>\Database</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="" line="107" package="">
+        <name>SecureData</name>
+        <full_name>\MySQL::SecureData()</full_name>
+        <docblock line="107">
+          <description>SecureData function.</description>
+          <long-description></long-description>
+          <tag name="access" line="107" description="private"/>
+          <tag name="param" line="107" description="" type="mixed" variable="$data">
+            <type>mixed</type>
+          </tag>
+          <tag name="return" line="107" description="$data in s secure fashion." type="\Return">
+            <type>\Return</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$data</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="127" package="">
+        <name>ExecuteSQL</name>
+        <full_name>\MySQL::ExecuteSQL()</full_name>
+        <docblock line="127">
+          <description>ExecuteSQL function.</description>
+          <long-description></long-description>
+          <tag name="access" line="127" description="public"/>
+          <tag name="param" line="127" description="" type="mixed" variable="$query">
+            <type>mixed</type>
+          </tag>
+          <tag name="return" line="127" description="results of the SQL connection" type="\Return">
+            <type>\Return</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$query</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="155" package="">
+        <name>Insert</name>
+        <full_name>\MySQL::Insert()</full_name>
+        <docblock line="155">
+          <description>Insert function.</description>
+          <long-description></long-description>
+          <tag name="access" line="155" description="public"/>
+          <tag name="param" line="155" description="" type="mixed" variable="$vars">
+            <type>mixed</type>
+          </tag>
+          <tag name="param" line="155" description="" type="mixed" variable="$table">
+            <type>mixed</type>
+          </tag>
+          <tag name="param" line="155" description="&lt;p&gt;(default: '')&lt;/p&gt;" type="string" variable="$exclude">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="155" description="a record to the database based on the array key name" type="\Adds">
+            <type>\Adds</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$vars</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$table</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$exclude</name>
+          <default>''</default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="191" package="">
+        <name>Delete</name>
+        <full_name>\MySQL::Delete()</full_name>
+        <docblock line="191">
+          <description>Delete function.</description>
+          <long-description></long-description>
+          <tag name="access" line="191" description="public"/>
+          <tag name="param" line="191" description="" type="mixed" variable="$table">
+            <type>mixed</type>
+          </tag>
+          <tag name="param" line="191" description="&lt;p&gt;(default: '')&lt;/p&gt;" type="string" variable="$where">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="191" description="&lt;p&gt;(default: '')&lt;/p&gt;" type="string" variable="$limit">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="191" description="&lt;p&gt;(default: false)&lt;/p&gt;" type="bool" variable="$like">
+            <type>bool</type>
+          </tag>
+          <tag name="return" line="191" description="a record from the database" type="\Deletes">
+            <type>\Deletes</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$table</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$where</name>
+          <default>''</default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$limit</name>
+          <default>''</default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$like</name>
+          <default>false</default>
+          <type>bool</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="230" package="">
+        <name>Select</name>
+        <full_name>\MySQL::Select()</full_name>
+        <docblock line="230">
+          <description>Select function.</description>
+          <long-description></long-description>
+          <tag name="access" line="230" description="public"/>
+          <tag name="param" line="230" description="" type="mixed" variable="$from">
+            <type>mixed</type>
+          </tag>
+          <tag name="param" line="230" description="&lt;p&gt;(default: '')&lt;/p&gt;" type="string" variable="$where">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="230" description="&lt;p&gt;(default: '')&lt;/p&gt;" type="string" variable="$orderBy">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="230" description="&lt;p&gt;(default: '')&lt;/p&gt;" type="string" variable="$limit">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="230" description="&lt;p&gt;(default: false)&lt;/p&gt;" type="bool" variable="$like">
+            <type>bool</type>
+          </tag>
+          <tag name="param" line="230" description="&lt;p&gt;(default: 'AND')&lt;/p&gt;" type="string" variable="$operand">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="230" description="&lt;p&gt;(default: '*')&lt;/p&gt;" type="string" variable="$cols">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="230" description="a single row from $from where $where is true" type="\Gets">
+            <type>\Gets</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$from</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$where</name>
+          <default>''</default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$orderBy</name>
+          <default>''</default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$limit</name>
+          <default>''</default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$like</name>
+          <default>false</default>
+          <type>bool</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$operand</name>
+          <default>'AND'</default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$cols</name>
+          <default>'*'</default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="280" package="">
+        <name>Update</name>
+        <full_name>\MySQL::Update()</full_name>
+        <docblock line="280">
+          <description>Update function.</description>
+          <long-description></long-description>
+          <tag name="access" line="280" description="public"/>
+          <tag name="param" line="280" description="" type="mixed" variable="$table">
+            <type>mixed</type>
+          </tag>
+          <tag name="param" line="280" description="" type="mixed" variable="$set">
+            <type>mixed</type>
+          </tag>
+          <tag name="param" line="280" description="" type="mixed" variable="$where">
+            <type>mixed</type>
+          </tag>
+          <tag name="param" line="280" description="&lt;p&gt;(default: '')&lt;/p&gt;" type="string" variable="$exclude">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="280" description="a record in the database based on WHERE" type="\Update">
+            <type>\Update</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$table</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$set</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$where</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$exclude</name>
+          <default>''</default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="327" package="">
+        <name>ArrayResult</name>
+        <full_name>\MySQL::ArrayResult()</full_name>
+        <docblock line="327">
+          <description>ArrayResult function.</description>
+          <long-description></long-description>
+          <tag name="access" line="327" description="public"/>
+          <tag name="return" line="327" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="339" package="">
+        <name>ArrayResults</name>
+        <full_name>\MySQL::ArrayResults()</full_name>
+        <docblock line="339">
+          <description>ArrayResults function.</description>
+          <long-description></long-description>
+          <tag name="access" line="339" description="public"/>
+          <tag name="return" line="339" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="360" package="">
+        <name>ArrayResultsWithKey</name>
+        <full_name>\MySQL::ArrayResultsWithKey()</full_name>
+        <docblock line="360">
+          <description>ArrayResultsWithKey function.</description>
+          <long-description></long-description>
+          <tag name="access" line="360" description="public"/>
+          <tag name="param" line="360" description="&lt;p&gt;(default: 'id')&lt;/p&gt;" type="string" variable="$key">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="360" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$key</name>
+          <default>'id'</default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="380" package="">
+        <name>LastInsertID</name>
+        <full_name>\MySQL::LastInsertID()</full_name>
+        <docblock line="380">
+          <description>LastInsertID function.</description>
+          <long-description></long-description>
+          <tag name="access" line="380" description="public"/>
+          <tag name="return" line="380" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="393" package="">
+        <name>CountRows</name>
+        <full_name>\MySQL::CountRows()</full_name>
+        <docblock line="393">
+          <description>CountRows function.</description>
+          <long-description></long-description>
+          <tag name="access" line="393" description="public"/>
+          <tag name="param" line="393" description="" type="mixed" variable="$from">
+            <type>mixed</type>
+          </tag>
+          <tag name="param" line="393" description="&lt;p&gt;(default: '')&lt;/p&gt;" type="string" variable="$where">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="393" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$from</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$where</name>
+          <default>''</default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="405" package="">
+        <name>CloseConnection</name>
+        <full_name>\MySQL::CloseConnection()</full_name>
+        <docblock line="405">
+          <description>CloseConnection function.</description>
+          <long-description></long-description>
+          <tag name="access" line="405" description="public"/>
+          <tag name="return" line="405" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="PPC:ERR-50000">No summary was found for this file</error>
+      <error line="21" code="PPC:ERR-50007">No summary for property $lastError</error>
+      <error line="22" code="PPC:ERR-50007">No summary for property $lastQuery</error>
+      <error line="23" code="PPC:ERR-50007">No summary for property $result</error>
+      <error line="24" code="PPC:ERR-50007">No summary for property $records</error>
+      <error line="25" code="PPC:ERR-50007">No summary for property $affected</error>
+      <error line="26" code="PPC:ERR-50007">No summary for property $rawResults</error>
+      <error line="27" code="PPC:ERR-50007">No summary for property $arrayedResult</error>
+      <error line="29" code="PPC:ERR-50007">No summary for property $hostname</error>
+      <error line="30" code="PPC:ERR-50007">No summary for property $username</error>
+      <error line="31" code="PPC:ERR-50007">No summary for property $password</error>
+      <error line="32" code="PPC:ERR-50007">No summary for property $database</error>
+      <error line="34" code="PPC:ERR-50007">No summary for property $databaseLink</error>
+    </parse_markers>
+    <source>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</source>
+  </file>
+  <package name="global" full_name="global"/>
+  <namespace name="global" full_name="global"/>
+  <namespace name="" full_name="">
+    <namespace name="" full_name="\"/>
+  </namespace>
+  <deprecated count="0"/>
+</project>
