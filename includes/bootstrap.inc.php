@@ -29,9 +29,11 @@ define('DOC_ROOT', getcwd());
 $from     = 'bot.blocker@yourdomain.com'; // from email
 $recip    = 'webmaster@yourdomain.com'; // to email
 $subject  = 'Bad Bot Alert!';
+$message  = '';
+//File name for DNSBL list. black_list(); line 206.
+$dnsbl_file ='dnsbl.dat';
 //File name to write data to
 $filename = 'blacklist.dat';
-$message  = '';
 //Do a whois lookup?
 $lookup   = '';
 //Number of times visitor is allowed to vist before being black listed.
@@ -198,7 +200,7 @@ function variable_del($name) {
  * @return Depending on how many sites say that the IP address is a spammer it will pass the variable as true or false.
  * @param mixed $ipaddress return the IP address of the visitor. 
  * @type var array $dnsbl_lookup returns an array of DNSBL sites.
- * @todo Make $dnsbl_lookup call from a config file for easier editing of the list.   
+ * @todo Make $dnsbl_lookup call from dnsbl.dat for easier editing of the list.   
  * @return bool Depending on how many sites say that the IP address is a spammer it will pass the variable as true or false.
  */
 function blacklist_query($ipaddress){ 
